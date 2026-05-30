@@ -1,1 +1,33 @@
 # TODO: Deployment with 2 replicas, resource requests/limits
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+  labels:
+    app: noderegistry
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: noderegistry
+  template:
+    metadata:
+      labels:
+        app: noderegistry
+    spec:
+      containers:
+      - name: noderegistry
+        image: juanbrero/exercise-07-hpa
+        imagePullPolicy: ifNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DATABASE_URL
+          value: ${DATABASE_URL}
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
